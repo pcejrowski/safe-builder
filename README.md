@@ -5,13 +5,21 @@
 A Scala micro-library for generating type-safe builder for any `case class` via annotation.
 
 ## Installation
-Add the following dependency to your `build.sbt`.
+Add resolver to bintray repo:
 ```
-libraryDependencies += "com.github.pcejrowski" %% "safe-builder" % "<version>"
+resolvers += "pcejrowski maven" at "https://dl.bintray.com/pcejrowski/maven"
+```
+and add the following dependency to your `build.sbt`.
+```
+libraryDependencies += "com.github.pcejrowski" %% "safe-builder" % "0.1.0"
 ```
 or, if you are using Scala JS or Scala Native:
 ```
-libraryDependencies += "com.github.pcejrowski" %%% "safe-builder" % "<version>"
+libraryDependencies += "com.github.pcejrowski" %%% "safe-builder" % "0.1.0"
+```
+Finally, enable [Macro Paradise](https://docs.scala-lang.org/overviews/macros/paradise.html):
+```
+addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M11" cross CrossVersion.full)
 ```
 
 ## Usage
