@@ -69,7 +69,10 @@ object annotation {
 
           val args = fields.map(f => ValDef(Modifiers(), f.name, AppliedTypeTree(Ident(TypeName("Option")), List(f.tpe)), q"None"))
 
-          val gets = fields.map(f => q"${f.name}.get")
+          val gets = fields.map {
+            case f if f.isOption => q"${f.name}.getOrElse(None)"
+            case f => q"${f.name}.get"
+          }
 
           val conditions = fields
             .filter(_.isRequired)

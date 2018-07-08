@@ -18,6 +18,17 @@ class annotationTest extends FlatSpec with Matchers {
     testee.baz should be(Left(.3f))
   }
 
+  it should "build if all non-optional params are there" in {
+    @builder case class Foo(foo: Option[String], bar: Boolean, baz: Either[Float, String])
+    val testee = Foo()
+      .barEnabled
+      .withBaz(.3f)
+      .build
+    testee.foo should be(None)
+    testee.bar should be(true)
+    testee.baz should be(Left(.3f))
+  }
+
   it should "not build if not all params are there" in {
     @builder case class Foo(foo: Option[String], bar: Boolean, baz: Either[Float, String])
     assertTypeError("""Foo().withFoo("foo").build""")
