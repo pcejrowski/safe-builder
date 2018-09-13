@@ -30,7 +30,7 @@ object Settings {
       Developer(
         id = "pcejrowski",
         name = "Paweł Cejrowski",
-        email = "pcejrowski@tapad.com",
+        email = "pcejrowski@gmail.com",
         url = url("http://github.com/pcejrowski")
       )
     ),
