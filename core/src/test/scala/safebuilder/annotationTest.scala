@@ -43,6 +43,11 @@ class annotationTest extends FlatSpec with Matchers {
     testee.foo should be("diff-foo")
   }
 
+  it should "not break the built-in apply method" in {
+    @builder case class Foo(foo: String)
+    Foo("foo").foo should be("foo")
+  }
+
   it should "not build if not all params are there" in {
     @builder case class Foo(foo: Option[String], bar: Boolean, baz: Either[Float, String])
     assertTypeError("""Foo().withFoo("foo").build""")
