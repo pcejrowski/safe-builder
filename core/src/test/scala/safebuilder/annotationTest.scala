@@ -29,6 +29,20 @@ class annotationTest extends FlatSpec with Matchers {
     testee.baz should be(Left(.3f))
   }
 
+  it should "respect default value" in {
+    @builder case class Foo(foo: String = "foo")
+    val testee = Foo().build
+    testee.foo should be("foo")
+  }
+
+  it should "allow to overwrite default value" in {
+    @builder case class Foo(foo: String = "foo")
+    val testee = Foo()
+      .withFoo("diff-foo")
+      .build
+    testee.foo should be("diff-foo")
+  }
+
   it should "not build if not all params are there" in {
     @builder case class Foo(foo: Option[String], bar: Boolean, baz: Either[Float, String])
     assertTypeError("""Foo().withFoo("foo").build""")

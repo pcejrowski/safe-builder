@@ -71,6 +71,7 @@ object annotation {
 
           val gets = fields.map {
             case f if f.isOption => q"${f.name}.getOrElse(None)"
+            case f if f.hasDefault => q"${f.name}.getOrElse(${f.default})"
             case f => q"${f.name}.get"
           }
 
@@ -100,7 +101,7 @@ object annotation {
       case class Field(parent: ClassLexeme, name: TermName, tpe: Tree, default: Tree) {
         lazy val lex = FieldLexeme(name.toString)
 
-        def isRequired: Boolean = !isOption
+        def isRequired: Boolean = !isOption && !hasDefault
 
         def isOption: Boolean = isApplied(Some("Option"))
 
@@ -113,6 +114,12 @@ object annotation {
             case (AppliedTypeTree(Ident(TypeName(tpeName)), _), Some(typeName)) => tpeName == typeName
             case (AppliedTypeTree(Ident(TypeName(_)), _), None) => true
             case _ => false
+          }
+
+        def hasDefault: Boolean =
+          default match {
+            case EmptyTree => false
+            case _ => true
           }
 
         def mutators(fields: Seq[Field]): Seq[Tree] = {
