@@ -12,7 +12,8 @@ inThisBuild(
     scalacOptions in Compile ++= ScalacOptions,
     javacOptions in Compile ++= JavacOptions,
     scalafmtTestOnCompile := true,
-    scalafmtTestOnCompile := true
+    scalafmtTestOnCompile := true,
+    crossScalaVersions := Seq("2.12.6")
   )
 )
 
