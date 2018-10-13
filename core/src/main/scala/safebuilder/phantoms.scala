@@ -1,6 +1,7 @@
 package safebuilder
 
 object phantoms {
+
   sealed trait TBool {
     type And[B <: TBool] <: TBool
     type Or[B <: TBool] <: TBool

@@ -79,7 +79,7 @@ object annotation {
             .filter(_.isRequired)
             .map(f => SelectFromTypeTree(Ident(TypeName("G")), TypeName(f.lex.added)): Tree)
           val buildCondition = conditions.size match {
-            case 0 => Ident(TypeName("TTrue")) : Tree
+            case 0 => Ident(TypeName("TTrue")): Tree
             case 1 => conditions.head
             case _ => conditions.reduce((a, b) => AppliedTypeTree(Ident(TypeName("And")), List(a, b)): Tree)
           }
