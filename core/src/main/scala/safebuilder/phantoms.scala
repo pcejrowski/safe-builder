@@ -1,5 +1,7 @@
 package safebuilder
 
+import scala.language.higherKinds
+
 object phantoms {
 
   sealed trait TBool {

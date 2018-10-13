@@ -65,8 +65,6 @@ object annotation {
       }
       case class Builder(lex: ClassLexeme, fields: Seq[Field]) {
         def expr(): Expr[Any] = {
-          val nones = fields.map(_ => q"None")
-
           val args = fields.map(f => ValDef(Modifiers(), f.name, AppliedTypeTree(Ident(TypeName("Option")), List(f.tpe)), q"None"))
 
           val gets = fields.map {
@@ -109,8 +107,8 @@ object annotation {
 
         def isEither: Boolean = isApplied(Some("Either"))
 
-        def isApplied(implicit typeName: Option[String] = None): Boolean =
-          (tpe, typeName) match {
+        def isApplied(implicit typeNameOpt: Option[String] = None): Boolean =
+          (tpe, typeNameOpt) match {
             case (AppliedTypeTree(Ident(TypeName(tpeName)), _), Some(typeName)) => tpeName == typeName
             case (AppliedTypeTree(Ident(TypeName(_)), _), None) => true
             case _ => false
