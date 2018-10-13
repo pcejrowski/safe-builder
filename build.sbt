@@ -28,7 +28,7 @@ lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     moduleName := "safe-builder"
   )
   .settings(
-    addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M11" cross CrossVersion.full),
+    addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full),
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect"  % scalaVersion.value,
       "org.scala-lang" % "scala-compiler" % scalaVersion.value
