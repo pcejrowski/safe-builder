@@ -59,6 +59,12 @@ Following functions are generated depending on the type of the field:
 | `foo`        | `Boolean`     | `fooEnabled`      |
 |              |               | `fooDisabled`     |
 
+#### Defaults
+If there is a default (rhs) value defined for a field (e.g. `case class Foo(foo: String = "foo")`,
+the invocation of mutator for that field is no longer required and the default value will be used.
+Since the default value for `Option` is `None` by default, this setup will also accept to use `Some[_]`
+as a default value, even though it's considered to be an ambiguous anti-pattern.
+
 #### Debugging
 Add `-Ymacro-debug-lite` flag to `scalac` options and generated source code will show up in the console when you compile.
 ```
