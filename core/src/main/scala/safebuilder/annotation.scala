@@ -124,6 +124,9 @@ object annotation {
           def args(implicit param: Option[Any] = None) = fields.map {
             case f if f == this && f.isOption => q"Some(Some(${f.name}))"
             case f if f == this && f.isEither && param.isDefined => q"Some(${TermName(param.get.toString)}(${f.name}))"
+            case f if f == this && f.isSeq && param.contains("Seq") => q"Some(${TermName(f.lex.singular)} +: ${f.name})"
+            case f if f == this && f.isSeq && param.contains("Prepend") => q"Some(${TermName(f.lex.singular)} +: ${f.name}.toSeq.flatten)"
+            case f if f == this && f.isSeq && param.contains("Append") => q"Some(${f.name}.toSeq.flatten :+ ${TermName(f.lex.singular)})"
             case f if f == this && param.isDefined => q"Some(${Literal(Constant(param.get))})"
             case f if f == this => q"Some(${f.name})"
             case f => q"${f.name}"
@@ -157,6 +160,25 @@ object annotation {
                 q"""
                     def ${TermName(lex.disabledForm)}(implicit ev: G#${TypeName(lex.added)} =:= TFalse) =
                       new ${TypeName(parent.builder)}[G { type ${TypeName(lex.added)} = TTrue }](..${args(Some(false))})
+                 """
+              )
+            case t@AppliedTypeTree(Ident(TypeName("Seq")), List(innerTpe)) =>
+              Seq(
+                q"""
+                    def ${TermName(lex.withForm)}(${TermName(lex.lemma)}: $t)(implicit ev: G#${TypeName(lex.added)} =:= TFalse) =
+                      new ${TypeName(parent.builder)}[G { type ${TypeName(lex.added)} = TTrue }](..$args)
+                 """,
+                q"""
+                    def ${TermName(lex.withForm)}(${TermName(lex.singular)}: $innerTpe, ${TermName(lex.lemma)}: $innerTpe*)(implicit ev: G#${TypeName(lex.added)} =:= TFalse) =
+                      new ${TypeName(parent.builder)}[G { type ${TypeName(lex.added)} = TTrue }](..${args(Some("Seq"))})
+                 """,
+                q"""
+                    def ${TermName(lex.prependForm)}(${TermName(lex.singular)}: $innerTpe) =
+                      new ${TypeName(parent.builder)}[G { type ${TypeName(lex.added)} = TTrue }](..${args(Some("Prepend"))})
+                 """,
+                q"""
+                    def ${TermName(lex.appendForm)}(${TermName(lex.singular)}: $innerTpe) =
+                      new ${TypeName(parent.builder)}[G { type ${TypeName(lex.added)} = TTrue }](..${args(Some("Append"))})
                  """
               )
             case t =>

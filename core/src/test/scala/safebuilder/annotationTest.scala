@@ -42,6 +42,56 @@ class annotationTest extends FreeSpec with Matchers {
         testee.foo shouldBe true
         testee.bar shouldBe false
       }
+      "Seq" - {
+        "pass as Seq" in {
+          @builder case class Foo(foos: Seq[Int])
+          val testee = Foo()
+            .withFoos(Seq(1, 2, 3))
+            .build
+          testee.foos should contain theSameElementsInOrderAs Seq(1, 2, 3)
+        }
+        "pass as varargs" in {
+          @builder case class Foo(foos: Seq[Int])
+          val testee = Foo()
+            .withFoos(1, 2, 3)
+            .build
+          testee.foos should contain theSameElementsInOrderAs Seq(1, 2, 3)
+        }
+        "append to existing" in {
+          @builder case class Foo(foos: Seq[Int])
+          val testee = Foo()
+            .withFoos(1, 2, 3)
+            .appendFoos(4)
+            .appendFoos(5)
+            .build
+          testee.foos should contain theSameElementsInOrderAs Seq(1, 2, 3, 4, 5)
+        }
+        "append to create new collection" in {
+          @builder case class Foo(foos: Seq[Int])
+          val testee = Foo()
+            .appendFoos(1)
+            .appendFoos(2)
+            .build
+          testee.foos should contain theSameElementsInOrderAs Seq(1, 2)
+        }
+        "prepend to existing" in {
+          @builder case class Foo(foos: Seq[Int])
+          val testee = Foo()
+            .withFoos(1, 2, 3)
+            .prependFoos(0)
+            .prependFoos(-1)
+            .build
+          testee.foos should contain theSameElementsInOrderAs Seq(-1, 0, 1, 2, 3)
+        }
+        "prepend to create new collection" in {
+          @builder case class Foo(foos: Seq[Int])
+          val testee = Foo()
+            .prependFoos(2)
+            .prependFoos(1)
+            .build
+          testee.foos should contain theSameElementsInOrderAs Seq(1, 2)
+        }
+      }
       "Any (...other)" in {
         case class Baz(baz: String)
         @builder case class Foo(foo: String, bar: Float, baz: Baz)

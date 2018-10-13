@@ -28,7 +28,10 @@ Annotate your class with `@builder`
 import safebuilder.annotation.builder
 
 @builder
-case class Foo(name: Option[String], bar: Boolean, baz: Either[Float, String])
+case class Foo(name: Option[String],
+               bar: Boolean,
+               baz: Either[Float, String],
+               seq: Seq[Int])
 ```
 and enjoy builder API with compile-time correctness verification.
 ```scala
@@ -36,6 +39,7 @@ val foo = Foo()
   .withName("my-string")
   .barEnabled
   .withBaz(.3f)
+  .withSeq(1, 2, 3)
   .build
 ``` 
 The library will make sure that all non-optional fields are filled when you invoke `build`. Moreover, no field value can be overwritten.
@@ -50,14 +54,18 @@ because required parameters (`baz` and `bar`, respectively) are not defined.
 
 Following functions are generated depending on the type of the field:
 
-|  Field name  |      Type     |     Functions     |
-|:------------:|:-------------:|:-----------------:|
-| `foo`        | `A`           | `withFoo(foo: A)` |
-| `foo`        | `Option[A]`   | `withFoo(foo: A)` |
-| `foo`        | `Either[A,B]` | `withFoo(foo: A)` |
-|              |               | `withFoo(foo: B)` |
-| `foo`        | `Boolean`     | `fooEnabled`      |
-|              |               | `fooDisabled`     |
+|  Field name  |      Type     |     Functions                |
+|:------------:|:-------------:|:----------------------------:|
+| `foo`        | `A`           | `withFoo(foo: A)`            |
+| `foo`        | `Option[A]`   | `withFoo(foo: A)`            |
+| `foo`        | `Either[A,B]` | `withFoo(foo: A)`            |
+|              |               | `withFoo(foo: B)`            |
+| `foo`        | `Boolean`     | `fooEnabled`                 |
+|              |               | `fooDisabled`                |
+| `foos`       | `Seq[A]`      | `withFoos(foos: Seq[A])`     |
+|              |               | `withFoos(foo: A, foos: A*)` |
+|              |               | `appendFoos(foo: A)`         |
+|              |               | `prependFoos(foo: A)`        |
 
 #### Defaults
 If there is a default (rhs) value defined for a field (e.g. `case class Foo(foo: String = "foo")`,
