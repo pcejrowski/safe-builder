@@ -11,11 +11,11 @@ resolvers += "pcejrowski maven" at "https://dl.bintray.com/pcejrowski/maven"
 ```
 and add the following dependency to your `build.sbt`.
 ```
-libraryDependencies += "com.github.pcejrowski" %% "safe-builder" % "0.1.2"
+libraryDependencies += "com.github.pcejrowski" %% "safe-builder" % "0.1.3"
 ```
 or, if you are using Scala JS or Scala Native:
 ```
-libraryDependencies += "com.github.pcejrowski" %%% "safe-builder" % "0.1.2"
+libraryDependencies += "com.github.pcejrowski" %%% "safe-builder" % "0.1.3"
 ```
 Finally, enable [Macro Paradise](https://docs.scala-lang.org/overviews/macros/paradise.html):
 ```
