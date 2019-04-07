@@ -13,7 +13,7 @@ inThisBuild(
     javacOptions in Compile ++= JavacOptions,
     scalafmtTestOnCompile := true,
     scalafmtTestOnCompile := true,
-    crossScalaVersions := Seq("2.12.6")
+    crossScalaVersions := Seq("2.12.8")
   )
 )
 
@@ -26,32 +26,21 @@ lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .settings(PublishSettings:_*)
   .settings(
-    moduleName := "safe-builder"
-  )
-  .settings(
+    moduleName := "safe-builder",
+    scalaVersion := "2.12.8",
+    crossScalaVersions := Seq("2.11.12", "2.12.8"),
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full),
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect"  % scalaVersion.value,
-      "org.scala-lang" % "scala-compiler" % scalaVersion.value
+      "org.scala-lang" % "scala-compiler" % scalaVersion.value,
+      "org.scalatest" %%% "scalatest" % "3.1.0-SNAP8" % Test
     )
-  )
-  .jsSettings(
-    scalaVersion := "2.12.6",
-    crossScalaVersions := Seq("2.11.12", "2.12.6"),
-    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.5" % Test
-  )
-  .jvmSettings(
-    scalaVersion := "2.12.7",
-    crossScalaVersions := Seq("2.11.12", "2.12.7"),
-    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.5" % Test
   )
   .nativeSettings(
     scalaVersion := "2.11.12",
     crossScalaVersions := Seq("2.11.12"),
     nativeLinkStubs := true,
     sources in (Compile, doc) := Seq.empty, // https://github.com/scala-native/scala-native/issues/1121
-    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.0-SNAP10" % Test
-    // we cannot unify scalatest version on this SNAP , because JVM edition is buggy
   )
 
 lazy val coreJVM    = core.jvm
